@@ -1,5 +1,6 @@
 "use client";
 import * as React from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -10,41 +11,44 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 
-const heroData = [
-  {
-    title: "Wicked",
-    desc: "Elphaba, a misunderstood young woman because of her green skin, and Glinda, a popular girl, become friends until society turns them against each other...",
-    img: "/Feature.png",
-    rating: "6.9",
-    fullrating: "/10",
-  },
-  {
-    title: "Gladiator II",
-    desc: "After his home is conquered by the tyrannical emperors who now lead Rome, Lucius is forced to enter the Colosseum and must look to his past to find strength to return the glory of Rome to its people.",
-    img: "/Feature (1).png",
-    rating: "6.9",
-    fullrating: "/10",
-  },
-  {
-    title: "Moana 2",
-    desc: "After receiving an unexpected call from her wayfinding ancestors, Moana must journey to the far seas of Oceania and into dangerous, long-lost waters for an adventure unlike anything she's ever faced.",
-    img: "/Feature (2).png",
-    rating: "6.8",
-    fullrating: "/10",
-  },
-];
+const BASE_URL = "https://api.themoviedb.org/3";
 
 export function HeroSection() {
   const [api, setApi] = React.useState(null);
+  const [movieData, setMovieData] = useState([]);
+
+  const getData = async () => {
+    const data = await fetch(
+      `${BASE_URL}/movie/now_playing?language=en-US&page=1`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization:
+            "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxMjI5ZmNiMGRmZTNkMzc2MWFmOWM0YjFjYmEyZTg1NiIsIm5iZiI6MTc1OTcxMTIyNy43OTAwMDAyLCJzdWIiOiI2OGUzMGZmYjFlN2Y3MjAxYjI5Y2FiYmIiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.M0DQ3rCdsWnMw8U-8g5yGXx-Ga00Jp3p11eRyiSxCuY",
+        },
+      }
+    );
+    const result = await data.json();
+
+    setMovieData(result.results);
+  };
+  useEffect(() => {
+    getData();
+  }, []);
+
   return (
-    <div className=" w-full max-w-[1440px] mx-auto overflow-hidden ">
+    <div className="  overflow-hidden ">
       <Carousel setApi={setApi}>
         <CarouselContent>
-          {heroData.map((item, index) => (
+          {movieData.map((item, index) => (
             <CarouselItem key={index}>
               <Card className="border-0 shadow-none relative">
                 <CardContent>
-                  <img src={item.img} />
+                  <img
+                    src={`https://image.tmdb.org/t/p/original${item.backdrop_path}`}
+                    alt={item.title}
+                    className="w-full h-[600px] object-cover"
+                  />
 
                   <div className="absolute bottom-[158px] md:left-[140px] text-white w-[404px] h-[264px]">
                     <div className="leading-tight py-1">
@@ -52,19 +56,20 @@ export function HeroSection() {
                         Now Playing:
                       </h1>
 
-                      <h2 className=" md:text-6xl font-semibold  mb-4">
+                      <h2 className=" md:text-4xl font-semibold  mb-4">
                         {item.title}
                       </h2>
                       <span className="text-yellow-400 text-2xl">★</span>
                       <span className="text-2xl font-bold">{item.rating}</span>
-                      <span className="text-2xl text-gray-400">
-                        {item.fullrating}
+                      <span className="text-2xl text-white">
+                        {item.vote_average}
                       </span>
+                      <span className="text-xl text-gray-400">/10</span>
                     </div>
 
                     <div className="flex items-center space-x-2 mb-4 py-1">
-                      <p className="text-gray-200 text-[12px] w-[302px] h-[80px]">
-                        {item.desc}
+                      <p className="text-gray-200 text-[12px] w-[310px] h-[110px]">
+                        {item.overview}
                       </p>
                     </div>
 

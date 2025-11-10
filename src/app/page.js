@@ -1,6 +1,7 @@
 import { Header } from "./_features/Header";
 import { HeroSection } from "./_features/home/HeroSection";
 import MovieList from "./_components/MovieList";
+import { Footer } from "./_features/Footer";
 
 export default function Page() {
   return (
@@ -10,6 +11,7 @@ export default function Page() {
       <MovieList type="upcoming" />
       <MovieList type="popular" />
       <MovieList type="top_rated" />
+      <Footer />
     </div>
   );
 }

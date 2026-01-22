@@ -44,7 +44,7 @@ export default function MovieDetails() {
     if (data.crew) {
       const directors = data.crew.filter((c) => c.job === "Director");
       const writers = data.crew.filter((c) =>
-        ["Writer", "Screenplay", "Story"].includes(c.job)
+        ["Writer", "Screenplay", "Story"].includes(c.job),
       );
       setDirector(directors);
       setWriters(writers);
@@ -54,7 +54,7 @@ export default function MovieDetails() {
   const getSimilar = async () => {
     const res = await fetch(
       `${BASE_URL}/movie/${id}/similar?language=en-US&page=1`,
-      { headers: { Authorization: TOKEN } }
+      { headers: { Authorization: TOKEN } },
     );
     const data = await res.json();
     setSimilar(data.results ? data.results.slice(0, 6) : []);
@@ -70,7 +70,7 @@ export default function MovieDetails() {
   if (!movie) return <p>Loading...</p>;
 
   const trailer = videos.find(
-    (v) => v.type === "Trailer" && v.site === "YouTube"
+    (v) => v.type === "Trailer" && v.site === "YouTube",
   );
 
   return (
@@ -116,7 +116,8 @@ export default function MovieDetails() {
             {movie.genres.map((genre) => (
               <span
                 key={genre.id}
-                className="px-3 py-1 text-black border rounded-full text-sm"
+                onClick={() => router.push(`/genres/${genre.id}`)}
+                className="px-3 py-1 text-black border cursor-pointer rounded-full text-sm"
               >
                 {genre.name}
               </span>

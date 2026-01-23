@@ -1,6 +1,7 @@
 "use client";
 import * as React from "react";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -10,12 +11,14 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import Image from "next/image";
 
 const BASE_URL = "https://api.themoviedb.org/3";
 
 export function HeroSection() {
   const [api, setApi] = React.useState(null);
   const [movieData, setMovieData] = useState([]);
+  const router = useRouter();
 
   const getData = async () => {
     const data = await fetch(
@@ -26,7 +29,7 @@ export function HeroSection() {
           Authorization:
             "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxMjI5ZmNiMGRmZTNkMzc2MWFmOWM0YjFjYmEyZTg1NiIsIm5iZiI6MTc1OTcxMTIyNy43OTAwMDAyLCJzdWIiOiI2OGUzMGZmYjFlN2Y3MjAxYjI5Y2FiYmIiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.M0DQ3rCdsWnMw8U-8g5yGXx-Ga00Jp3p11eRyiSxCuY",
         },
-      }
+      },
     );
     const result = await data.json();
 
@@ -44,10 +47,12 @@ export function HeroSection() {
             <CarouselItem key={index}>
               <Card className="border-0 shadow-none relative">
                 <CardContent>
-                  <img
+                  <Image
                     src={`https://image.tmdb.org/t/p/original${item.backdrop_path}`}
                     alt={item.title}
                     className="w-full h-[600px] object-cover"
+                    height={600}
+                    width={1440}
                   />
 
                   <div className="absolute bottom-[158px] md:left-[140px] text-white w-[404px] h-[264px]">
@@ -73,7 +78,10 @@ export function HeroSection() {
                       </p>
                     </div>
 
-                    <Button className="bg-white text-black font-semibold  rounded-md hover:bg-gray-200 w-[145px] h-[40px] text-lg">
+                    <Button
+                      onClick={() => router.push(`/moviesDetail/${item.id}`)}
+                      className="bg-white text-black font-semibold rounded-md hover:bg-gray-200 w-[145px] h-[41px] text-lg"
+                    >
                       ▶ Watch Trailer
                     </Button>
                   </div>

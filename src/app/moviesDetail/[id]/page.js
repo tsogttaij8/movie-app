@@ -3,13 +3,14 @@ import { Header } from "@/app/_features/Header";
 import { Footer } from "@/app/_features/Footer";
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import Image from "next/image";
 
 const BASE_URL = "https://api.themoviedb.org/3";
 const IMAGE_URL = "https://image.tmdb.org/t/p/original";
 const TOKEN =
   "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxMjI5ZmNiMGRmZTNkMzc2MWFmOWM0YjFjYmEyZTg1NiIsIm5iZiI6MTc1OTcxMTIyNy43OTAwMDAyLCJzdWIiOiI2OGUzMGZmYjFlN2Y3MjAxYjI5Y2FiYmIiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.M0DQ3rCdsWnMw8U-8g5yGXx-Ga00Jp3p11eRyiSxCuY";
 
-export default function MovieDetails() {
+export default function MoviesDetails() {
   const { id } = useParams();
   const [movie, setMovie] = useState(null);
   const [videos, setVideos] = useState([]);
@@ -20,31 +21,37 @@ export default function MovieDetails() {
   const router = useRouter();
 
   const getMovie = async () => {
-    const res = await fetch(`${BASE_URL}/movie/${id}?language=en-US`, {
+    const result = await fetch(`${BASE_URL}/movie/${id}?language=en-US`, {
       headers: { Authorization: TOKEN },
     });
-    const data = await res.json();
+    const data = await result.json();
     setMovie(data);
   };
 
   const getVideos = async () => {
-    const res = await fetch(`${BASE_URL}/movie/${id}/videos?language=en-US`, {
-      headers: { Authorization: TOKEN },
-    });
-    const data = await res.json();
-    setVideos(data.results || []);
+    const result = await fetch(
+      `${BASE_URL}/movie/${id}/videos?language=en-US`,
+      {
+        headers: { Authorization: TOKEN },
+      },
+    );
+    const data = await result.json();
+    setVideos(data.results);
   };
 
   const getCredits = async () => {
-    const res = await fetch(`${BASE_URL}/movie/${id}/credits?language=en-US`, {
-      headers: { Authorization: TOKEN },
-    });
-    const data = await res.json();
+    const result = await fetch(
+      `${BASE_URL}/movie/${id}/credits?language=en-US`,
+      {
+        headers: { Authorization: TOKEN },
+      },
+    );
+    const data = await result.json();
     setStars(data.cast ? data.cast.slice(0, 5) : []);
     if (data.crew) {
-      const directors = data.crew.filter((c) => c.job === "Director");
-      const writers = data.crew.filter((c) =>
-        ["Writer", "Screenplay", "Story"].includes(c.job),
+      const directors = data.crew.filter((person) => person.job === "Director");
+      const writers = data.crew.filter((person) =>
+        ["Writer", "Screenplay", "Story"].includes(person.job),
       );
       setDirector(directors);
       setWriters(writers);
@@ -52,11 +59,11 @@ export default function MovieDetails() {
   };
 
   const getSimilar = async () => {
-    const res = await fetch(
+    const result = await fetch(
       `${BASE_URL}/movie/${id}/similar?language=en-US&page=1`,
       { headers: { Authorization: TOKEN } },
     );
-    const data = await res.json();
+    const data = await result.json();
     setSimilar(data.results ? data.results.slice(0, 6) : []);
   };
 
@@ -94,10 +101,12 @@ export default function MovieDetails() {
           </div>
 
           <div className="flex flex-row gap-9">
-            <img
+            <Image
               src={`${IMAGE_URL}${movie.poster_path}`}
               alt={movie.title}
               className="w-[300px] h-[450px] rounded-xl"
+              height={450}
+              width={300}
             />
             {trailer ? (
               <iframe
@@ -117,7 +126,7 @@ export default function MovieDetails() {
               <span
                 key={genre.id}
                 onClick={() => router.push(`/genres/${genre.id}`)}
-                className="px-3 py-1 text-black border cursor-pointer rounded-full text-sm"
+                className="px-3 cursor-pointer py-1 text-black border rounded-full text-sm"
               >
                 {genre.name}
               </span>
@@ -134,6 +143,7 @@ export default function MovieDetails() {
               </p>
             )}
           </div>
+
           <div className="mt-5">
             {writers.length > 0 && (
               <p>
@@ -142,6 +152,7 @@ export default function MovieDetails() {
               </p>
             )}
           </div>
+
           <div className="mt-5">
             {stars.length > 0 && (
               <p>
@@ -160,7 +171,7 @@ export default function MovieDetails() {
               className="w-[200px] cursor-pointer"
               onClick={() => router.push(`/moviesDetail/${movie.id}`)}
             >
-              <img
+              <Image
                 src={
                   movie.poster_path
                     ? `${IMAGE_URL}${movie.poster_path}`
@@ -168,6 +179,8 @@ export default function MovieDetails() {
                 }
                 alt={movie.title}
                 className="rounded-lg w-full h-[300px] object-cover"
+                height={300}
+                width={1440}
               />
               <p className="text-sm mt-2">{movie.title}</p>
             </div>

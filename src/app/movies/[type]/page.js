@@ -31,7 +31,7 @@ export default function MoviePage() {
           Authorization:
             "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxMjI5ZmNiMGRmZTNkMzc2MWFmOWM0YjFjYmEyZTg1NiIsIm5iZiI6MTc1OTcxMTIyNy43OTAwMDAyLCJzdWIiOiI2OGUzMGZmYjFlN2Y3MjAxYjI5Y2FiYmIiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.M0DQ3rCdsWnMw8U-8g5yGXx-Ga00Jp3p11eRyiSxCuY",
         },
-      }
+      },
     );
     const result = await data.json();
 
@@ -42,7 +42,9 @@ export default function MoviePage() {
   useEffect(() => {
     getData();
   }, [page]);
-
+  const handleNextdoublePageButton = () => {
+    setPage(page + 2);
+  };
   const handleNextPageButton = () => {
     setPage(page + 1);
   };
@@ -59,14 +61,15 @@ export default function MoviePage() {
             {type.replace("_", " ").replace(/\b\w/g, (c) => c.toUpperCase())}
           </h2>
         </div>
-        <div className="flex flex-wrap gap-5 cursor-pointer rounded-md">
+        <div className="flex flex-wrap gap-5">
           {movieData.map((movie, index) => (
             <div
               key={index}
               onClick={() => router.push(`/moviesDetail/${movie.id}`)}
+              className="cursor-pointer rounded-2xl overflow-hidden shadow-gray-600 hover:shadow-md transition"
             >
               <div
-                className="w-[230px] h-[340px] bg-cover bg-center "
+                className="w-[230px] h-[340px] rounded-t-2xl bg-cover bg-center "
                 style={{
                   backgroundImage: `url(https://image.tmdb.org/t/p/original/${movie.poster_path})`,
                 }}
@@ -98,10 +101,18 @@ export default function MoviePage() {
                   {page}
                 </PaginationLink>
               </PaginationItem>
-              <PaginationItem>
+              <PaginationItem
+                onClick={() => {
+                  handleNextPageButton();
+                }}
+              >
                 <PaginationLink href="#">{page + 1}</PaginationLink>
               </PaginationItem>
-              <PaginationItem>
+              <PaginationItem
+                onClick={() => {
+                  handleNextdoublePageButton();
+                }}
+              >
                 <PaginationLink href="#">{page + 2}</PaginationLink>
               </PaginationItem>
               <PaginationItem>
@@ -118,6 +129,7 @@ export default function MoviePage() {
           </Pagination>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

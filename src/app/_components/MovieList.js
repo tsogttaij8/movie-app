@@ -46,7 +46,7 @@ export default function MovieList({ type }) {
           see more
           <Image
             className="w-[15px] h-[15px]"
-            src="/arrow continue.png"
+            src="/Vector (1).png"
             alt=""
             height={15}
             width={15}

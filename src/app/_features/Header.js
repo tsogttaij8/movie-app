@@ -75,8 +75,8 @@ export function Header() {
               onClick={() => router.push("/genres")}
             >
               <Image
-                src="/genre.svg"
-                className="w-4 h-4"
+                src="/Vector.png"
+                className="w-2 h-2"
                 alt=""
                 height={4}
                 width={4}
@@ -96,12 +96,7 @@ export function Header() {
                   onClick={() => router.push(`/genres/${genre.id}`)}
                 >
                   {genre.name}
-                  <Image
-                    src="/icons/arrow_continue.png"
-                    alt=""
-                    height={1}
-                    width={1}
-                  />
+                  <Image src="/public/Vector.png" alt="" height={1} width={1} />
                 </Badge>
               ))}
             </div>
@@ -151,8 +146,8 @@ export function Header() {
 
       <button className="p-2 rounded-md hover:bg-gray-50 transition">
         <Image
-          className="w-[35px] h-[35px]"
-          src="/moon.png"
+          className="w-[30px] h-[30px]"
+          src="/moon.svg"
           alt=""
           height={35}
           width={35}
